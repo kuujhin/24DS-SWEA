@@ -1,6 +1,3 @@
 /.vscode
-/1216.exe
-/1240.exe
-/3260.exe
-/test.cpp
-/test.exe
+
+*.exe

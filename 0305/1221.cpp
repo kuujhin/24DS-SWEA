@@ -1,5 +1,5 @@
 #include <iostream>
-#include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -14,14 +14,18 @@ int main(int argc, char **argv)
 
     for (int i = 1; i <= tcnum; ++i)
     {
-        int num;
+        string num;
         cin >> num;
 
         int len = 0;
         cin >> len;
 
-        string str[10000];
-        int cnt[10] = {0};
+        string str[10000] = {
+            "",
+        };
+        int cnt[10] = {
+            0,
+        };
 
         for (int j = 0; j < len; ++j)
         {
@@ -65,7 +69,7 @@ int main(int argc, char **argv)
             }
         }
 
-        cout << "#" << i << " ";
+        cout << num << "\n";
 
         for (int j = 0; j < 10; ++j)
         {
@@ -106,8 +110,6 @@ int main(int argc, char **argv)
                 }
             }
         }
-
-        cout << endl;
     }
 
     // fclose(sfp);

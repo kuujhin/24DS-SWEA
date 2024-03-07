@@ -7,8 +7,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-    FILE *sfp;
-    sfp = freopen("8898.txt", "r", stdin);
+    freopen("8898.txt", "r", stdin);
 
     int tcnum;
     cin >> tcnum;
@@ -20,53 +19,47 @@ int main(int argc, char **argv)
 
         vector<int> cow(n);
         vector<int> horse(m);
-        vector<int> distance(m);
 
         for (int j = 0; j < n; ++j)
         {
             cin >> cow[j];
         }
-        for (int j = 0; j < m; ++j)
-        {
-            cin >> horse[j];
-        }
-
         sort(cow.begin(), cow.end());
-        sort(horse.begin(), horse.end());
 
         int index;
         int count = 0;
         int _min;
+        int d;
 
         for (int j = 0; j < m; ++j)
         {
-            if (cow.begin() + index > cow.end())
-                break;
-            index = lower_bound(cow.begin() + index, cow.end(), horse[j]) - cow.begin();
+            cin >> horse[j];
+
+            index = lower_bound(cow.begin(), cow.end(), horse[j]) - cow.begin();
 
             if (index == 0)
             {
-                distance[j] = abs(cow[0] - horse[j]);
+                d = abs(cow[0] - horse[j]);
             }
             else if (index == n)
             {
-                distance[j] = abs(cow[n - 1] - horse[j]);
+                d = abs(cow[n - 1] - horse[j]);
             }
             else
             {
-                distance[j] = min(abs(cow[index] - horse[j]), abs(cow[index - 1] - horse[j]));
+                d = min(abs(cow[index] - horse[j]), abs(cow[index - 1] - horse[j]));
             }
 
             if (j == 0)
-                _min = distance[0];
+                _min = d;
 
-            if (distance[j] == _min)
+            if (d == _min)
             {
                 count++;
             }
-            else if (distance[j] < _min)
+            else if (d < _min)
             {
-                _min = distance[j];
+                _min = d;
                 count = 1;
             }
         }
@@ -76,6 +69,5 @@ int main(int argc, char **argv)
         cout << "#" << i << " " << _min + xdiff << " " << count << endl;
     }
 
-    fclose(sfp);
     return 0;
 }

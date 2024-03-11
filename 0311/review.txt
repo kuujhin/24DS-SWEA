@@ -1,0 +1,18 @@
+////////////////////////
+1257
+
+food
+
+s1 = food
+s2 = ood
+s3 = od
+s4 = d
+
+    d   food    od  ood 
+SA  4   1       3   2
+
+                                    LCP     L
+s4 = d          d                   0       1
+s1 = food       f   fo  foo food    0       4
+s2 = od         o   od              0       2
+s3 = ood        o   oo  ood         1       3

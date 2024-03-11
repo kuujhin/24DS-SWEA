@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <stack>
 
 using namespace std;
@@ -17,52 +16,29 @@ int main(int argc, char **argv)
         int n;
         cin >> n;
 
-        vector<int> inputList(n);
+        stack<int> myStack;
+        int cnt = 1;
+        string result = "";
+        bool isValid = true;
+
         for (int j = 0; j < n; ++j)
         {
-            cin >> inputList[j];
-        }
-
-        if (inputList[n - 1] != 1)
-        {
-            cout << "#" << i << " NO" << endl;
-            continue;
-        }
-
-        int input_list_count = 0;
-        int stack_count = 0;
-        stack<int> myStack;
-        bool isValid = true;
-        string result = "";
-        vector<int> pushedList(n + 1);
-
-        while (1)
-        {
-            if (pushedList[inputList[input_list_count]] == 1)
+            int temp;
+            cin >> temp;
+            while (cnt <= temp)
             {
-                if (myStack.top() == inputList[input_list_count])
-                {
-                    isValid = false;
-                    break;
-                }
-                else
-                {
-                    myStack.pop();
-                    result += "-";
-                    input_list_count++;
-                }
+                myStack.push(cnt++);
+                result += "+";
             }
-            else
-            {
-                for (int j = stack_count; j <= inputList[input_list_count]; ++j)
-                {
-                    myStack.push(stack_count++);
-                    result += "+";
-                    pushedList[j] = 1;
-                }
-            }
-        }
 
+            int t = myStack.top();
+            if (t != temp)
+            {
+                isValid = false;
+            }
+            myStack.pop();
+            result += "-";
+        }
         isValid ? cout << "#" << i << " " << result << endl : cout << "#" << i << " NO" << endl;
     }
 

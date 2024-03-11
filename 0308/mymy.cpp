@@ -1,13 +1,16 @@
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
 char bin[2000 + 1][2000 + 1];
+
+char code[2000 + 1][500 + 1];
 char NUMS[5][5][5];
 
 int main(int argc, char **argv)
 {
-    // freopen("test.txt", "r", stdin);
+    freopen("test.txt", "r", stdin);
 
     NUMS[2][1][1] = 0;
     NUMS[2][2][1] = 1;
@@ -20,8 +23,8 @@ int main(int argc, char **argv)
     NUMS[2][1][3] = 8;
     NUMS[1][1][2] = 9;
 
-    int sX, eX = -1;      // 암호코드가 존재하는 좌표 중 x, y 좌표의 최솟값과 최댓값
-    int final_result = 0; // 최종 결과값
+    int sX, sY, eX, eY = -1; // 암호코드가 존재하는 좌표 중 x, y 좌표의 최솟값과 최댓값
+    int final_result = 0;    // 최종 결과값
 
     int tcnum;
     cin >> tcnum;
@@ -33,24 +36,36 @@ int main(int argc, char **argv)
         cin >> N;
         cin >> M;
 
-        sX = eX = -1;
+        sX = sY = eX = eY = -1;
         final_result = 0;
+
+        int x = 1;
+        int y = 1;
 
         // 데이터 읽기
         for (i = 1; i <= N; ++i)
         {
-            for (j = 0; j < 4 * M;)
+            cin >> code[i];
+            // for (j = 0; j < 4 * M;)
+            if (strcmp(code[i], code[i - 1]) == 0)
+                continue;
+
+            bool isFind = false;
+            bin[x][0] = '0';
+            for (j = 0; j < M; ++j)
             {
-                char temp;
-                cin >> temp;
+                char temp = code[i][j];
+                if (temp == '0' && isFind == false)
+                    continue;
+                isFind = true;
 
                 // 0을 입력받은 경우 16진수를 2진수로 바로 변환
                 if (temp == '0')
                 {
-                    bin[i][++j] = '0';
-                    bin[i][++j] = '0';
-                    bin[i][++j] = '0';
-                    bin[i][++j] = '0';
+                    bin[x][4 * y + 1] = '0';
+                    bin[x][4 * y + 2] = '0';
+                    bin[x][4 * y + 3] = '0';
+                    bin[x][4 * y + 4] = '0';
                 }
                 else
                 {
@@ -60,25 +75,35 @@ int main(int argc, char **argv)
                     else
                         temp = temp - 'A' + 10;
 
-                    bin[i][++j] = (temp & 0x08) ? '1' : '0';
-                    bin[i][++j] = (temp & 0x04) ? '1' : '0';
-                    bin[i][++j] = (temp & 0x02) ? '1' : '0';
-                    bin[i][++j] = (temp & 0x01) ? '1' : '0';
+                    bin[x][4 * y + 1] = (temp & 0x08) ? '1' : '0';
+                    bin[x][4 * y + 2] = (temp & 0x04) ? '1' : '0';
+                    bin[x][4 * y + 3] = (temp & 0x02) ? '1' : '0';
+                    bin[x][4 * y + 4] = (temp & 0x01) ? '1' : '0';
 
                     // 암호코드가 존재하는 좌표 중 x, y 좌표의 최솟값과 최댓값을 찾아 해당 범위만 탐색한다.
-                    if (sX < 0)
+                    if (sX < 0 && sY < 0)
                     {
-                        sX = j;
+                        sX = y;
+                        sY = x;
                     }
-                    sX = min(sX, j);
-                    eX = max(eX, j);
+                    sX = min(sX, y);
+                    eX = max(eX, y);
+                    eY = x;
                 }
+                y++;
             }
-            int index = 7;
-            int odd = 0;
-            int even = 0;
-            for (j = eX; j >= sX; --j) // 오른쪽에서 왼쪽으로 탐색
+            x++;
+        }
+
+        int index = 7;
+        int odd = 0;
+        int even = 0;
+
+        for (i = 0; i <= x; i++) // 위에서 아래로 탐색
+        {
+            for (j = 4 * y; j >= 0; --j) // 오른쪽에서 왼쪽으로 탐색
             {
+                // cout << bin[i][j] << endl;
                 // 암호코드의 끝자리를 찾은 경우 (수직방향으로 반복되므로 맨 위의 줄일 때만 검사)
                 // 0번째 줄은 초기화를 안했으므로 '1'이 나올 수 없다. 따라서 바로 붙어있는 경우에도 검사 가능
                 if (bin[i][j] == '1' && bin[i - 1][j] != '1')
@@ -114,9 +139,9 @@ int main(int argc, char **argv)
 
                     // 코드의 가로가 길어졌는지 확인하기 위해 가장 얇은 부분의 길이를 구하여 그 값으로 모두 나누어 비율을 찾는다.
                     // 모든 암호코드 숫자는 가장 얇은 부분이 1개 이기 때문에 항상 나누어 떨어진다.
+                    cout << count[0] << " " << count[1] << " " << count[2] << endl;
                     int ratio = min(count[0], min(count[1], count[2]));
 
-                    // res 값에 기본 크기의 암호코드 값을 저장한다.
                     int res = 0;
                     res = NUMS[count[2] / ratio][count[1] / ratio][count[0] / ratio];
 

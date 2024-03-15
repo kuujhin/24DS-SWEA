@@ -23,9 +23,6 @@ double E;
 int parent[1000];
 int rnk[1000];
 
-// vector<int> parent;
-// vector<int> rnk;
-priority_queue<Edge, vector<Edge>, cmp> pq;
 
 int find_set(int x)
 {
@@ -52,31 +49,6 @@ void union_set(int x, int y)
     }
 }
 
-long long kruskal()
-{
-    double res = 0;
-
-    for (int i = 1; i <= V; ++i)
-    {
-        parent[i] = i;
-        rnk[i] = 0;
-    }
-
-    while (!pq.empty())
-    {
-        Edge edge = pq.top();
-
-        pq.pop();
-
-        if (find_set(edge.s) != find_set(edge.e))
-        {
-            union_set(edge.s, edge.e);
-            res += E * edge.w;
-            // cout << "w: " << edge.w << " E*w: " << E * edge.w << " res: " << res << endl;
-        }
-    }
-    return res;
-}
 int main(int argc, char **argv)
 {
 
@@ -90,17 +62,16 @@ int main(int argc, char **argv)
         int N;
         cin >> N;
 
-        // cout << i << "번째 N: " << N << endl;
 
-        vector<pair<long long, long long>> island(N);
+        vector<pair<long long, long long>> island(N + 1);
+priority_queue<Edge, vector<Edge>, cmp> pq;
 
-        // parent.resize(N, 0);
-        // rnk.resize(N, 0);
 
-        for (int j = 0; j < N; ++j)
+
+        for (int j = 1; j <= N; ++j)
             cin >> island[j].first;
 
-        for (int j = 0; j < N; ++j)
+        for (int j = 1; j <= N; ++j)
             cin >> island[j].second;
 
         cin >> E;
@@ -108,20 +79,42 @@ int main(int argc, char **argv)
 
         long long minDist = 0;
         int minIdx = 0;
-        for (int j = 0; j < N - 1; ++j)
+        for (int j = 1; j <= N - 1; ++j)
         {
-            for (int k = j + 1; k < N; ++k)
+            for (int k = j + 1; k <= N; ++k)
             {
                 long long w = (island[j].first - island[k].first) * (island[j].first - island[k].first) + (island[j].second - island[k].second) * (island[j].second - island[k].second);
-                pq.push({j + 1, k + 1, minDist});
+                pq.push({j, k, w});
                 V++;
+                // if (i == 10)
+                //     cout << "pushed: " << j << " " << k << " " << w << endl;
             }
-            // cout << "pushed: " << j + 1 << " " << k + 1 << " " << w << endl;
         }
 
-        // cout << i << "번째 V: " << V << endl;
+        long long res = 0;
 
-        long long res = kruskal();
+        for (int x = 1; x <= V; ++x)
+        {
+            parent[x] = x;
+            rnk[x] = 0;
+        }
+
+        while (!pq.empty())
+        {
+            Edge edge = pq.top();
+            if (i == 10)
+                cout << "pq.top(): " << edge.s << " " << edge.e << " " << edge.w << endl;
+            pq.pop();
+
+            if (find_set(edge.s) != find_set(edge.e))
+            {
+                union_set(edge.s, edge.e);
+                res += edge.w;
+                // cout << "w: " << edge.w << " E*w: " << E * edge.w << " res: " << res << endl;
+            }
+        }
+
+        res = E * res + 0.5;
 
         cout << "#" << i << " " << res << endl;
     }

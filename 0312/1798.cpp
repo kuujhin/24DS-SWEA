@@ -9,6 +9,7 @@ int maxTime = 9 * 60;
 int maxScore;
 string maxPath;
 int endIndex, totalIndex;
+int mycount = 0;
 
 void _search(int score, int currentTime, int currentIndex,
              int leftDay, bool isStart, string path,
@@ -24,7 +25,7 @@ void _search(int score, int currentTime, int currentIndex,
         if (tourpoint[i][4] == 0 && i != currentIndex)
         {
             // 공항인 경우 마지막 날인지 확인
-            if (tourpoint[i][1] == 0 && !isStart)
+            if (tourpoint[i][1] == 0)
             {
                 if (leftDay > 0)
                     continue;
@@ -34,7 +35,8 @@ void _search(int score, int currentTime, int currentIndex,
                     if (score > maxScore)
                     {
                         cout << "return airport" << endl;
-                        cout << "path: " << path << " score: " << score << endl;
+                        cout << "path: " << path + " 0"
+                             << " score: " << score << endl;
                         cout << "score: " << score << " time: " << currentTime << endl;
                         maxScore = score;
                         maxPath = path;
@@ -42,18 +44,7 @@ void _search(int score, int currentTime, int currentIndex,
                     return;
                 }
             }
-            // 호텔인 경우 다음 날 장소 탐색
-            if (tourpoint[i][1] == 2)
-            {
-                string newPath = path + " " + to_string(tourpoint[i][0]);
 
-                // cout << "return hotel" << endl;
-                // cout << "path: " << path << " score: " << score << endl;
-                // cout << "score: " << score << " time: " << currentTime << endl;
-                _search(score, 0, i, leftDay - 1, false, newPath, tourpoint, timetable);
-            }
-
-            // 관광지인 경우 이동 시간과 관광 시간 및 만족도를 계산
             else
             {
 
@@ -64,18 +55,33 @@ void _search(int score, int currentTime, int currentIndex,
 
                 int newTime = moveTime + tourTime + currentTime;
                 if (newTime > maxTime)
-                    return;
+                    continue;
 
                 int newScore = score + tourpoint[i][3];
 
-                string newPath = path + " " + to_string(tourpoint[i][0]);
+                string newPath = path + " " + to_string(i);
 
-                cout << "score: " << newScore << " time: " << newTime << " index: " << i;
-                cout << " day: " << leftDay << " path: " << newPath << endl;
-
-                tourpoint[i][4] = 1;
-                _search(newScore, newTime, i, leftDay, false, newPath, tourpoint, timetable);
-                tourpoint[i][4] = 0;
+                // 호텔인 경우 다음 날 장소 탐색
+                if (tourpoint[i][1] == 2)
+                {
+                    // if (mycount < 100)
+                    // {
+                    //     cout << "score: " << newScore << " time: " << newTime << " index: " << i;
+                    //     cout << " day: " << leftDay << " path: " << newPath << endl;
+                    //     mycount++;
+                    // }
+                    // cout << "return hotel" << endl;
+                    // cout << "path: " << path << " score: " << score << endl;
+                    // cout << "score: " << score << " time: " << currentTime << endl;
+                    _search(newScore, 0, i, leftDay - 1, false, newPath, tourpoint, timetable);
+                }
+                // 관광지인 경우 이동 시간과 관광 시간 및 만족도를 계산
+                else
+                {
+                    tourpoint[i][4] = 1;
+                    _search(newScore, newTime, i, leftDay, false, newPath, tourpoint, timetable);
+                    tourpoint[i][4] = 0;
+                }
             }
         }
     }
@@ -115,6 +121,10 @@ int main(int argc, char **argv)
             case 'A':
                 endIndex = j;
                 point[j][0] = j;
+                point[j][1] = 0;
+                point[j][2] = 0;
+                point[j][3] = 0;
+                point[j][4] = 0;
                 break;
             case 'P':
                 int time, score;
@@ -123,10 +133,14 @@ int main(int argc, char **argv)
                 point[j][1] = 1;
                 point[j][2] = time;
                 point[j][3] = score;
+                point[j][4] = 0;
                 break;
             case 'H':
                 point[j][0] = j;
                 point[j][1] = 2;
+                point[j][2] = 0;
+                point[j][3] = 0;
+                point[j][4] = 0;
                 break;
             }
         }

@@ -5,17 +5,17 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
-    freopen("1221.txt", "r", stdin);
+    freopen("test.txt", "r", stdin);
 
-    int tcnum;
-    cin >> tcnum;
+    int T;
+    cin >> T;
 
-    for (int i = 1; i <= tcnum; ++i)
+    for (int i = 1; i <= T; ++i)
     {
         string str;
         cin >> str;
 
-        cout << "#" << i << " " << str << endl;
+        cout << "#" << i << " " << endl;
     }
 
     return 0;

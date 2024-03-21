@@ -10,12 +10,12 @@ int main(int argc, char **argv)
     int T;
     cin >> T;
 
-    for (int i = 1; i <= T; ++i)
+    for (int t = 1; t <= T; ++t)
     {
         string str;
         cin >> str;
 
-        cout << "#" << i << " " << endl;
+        cout << "#" << t << " " << endl;
     }
 
     return 0;

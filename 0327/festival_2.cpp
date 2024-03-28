@@ -19,7 +19,6 @@ pair<int, int> parent[502][502];
 // Dijsktra Algorithm + parent 저장
 int dijkstra(int starti, int startj, int endi, int endj, bool flag = false)
 {
-    int start = (starti - 1) * C + startj;
     vector<vector<int>> dist(S + 1, vector<int>(C + 1, INFS));
     dist[starti][startj] = 0;
     priority_queue<pair<int, pair<int, int>>> pq;
